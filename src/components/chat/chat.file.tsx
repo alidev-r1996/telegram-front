@@ -11,7 +11,7 @@ type ChatFileProps = {
 const ChatFile = ({ sender: { img, name }, isYou, createdAt, file:{size, title, url} }: ChatFileProps) => {
   return (
     <div className={`flex items-start gap-4 ${!isYou && "ml-auto"}`}>
-      <img src={img && `http://localhost:3000/${img}` || "/user.png"} alt="" className="size-12 rounded-full" onError={(e) => (e.currentTarget.src = "/user.png")}/>
+      <img src={img && `${import.meta.env.VITE_API_URL}/${img}` || "/user.png"} alt="" className="size-12 rounded-full" onError={(e) => (e.currentTarget.src = "/user.png")}/>
       <div
         className={`w-96 ${isYou ? "bg-slate-900" : "bg-slate-700"} rounded-lg relative p-2 px-3`}
       >
@@ -22,7 +22,7 @@ const ChatFile = ({ sender: { img, name }, isYou, createdAt, file:{size, title, 
         ></span>
         <p className={`${isYou ? "text-blue-500" : "text-slate-200"} font-bold mb-2`}>{isYou ? "You" : name}</p>
         <div className="flex items-center gap-3">
-          <a href={`http://localhost:3000/${url}`} download className="!bg-blue-500 overflow-hidden text-white rounded-full !p-3 size-12 flex items-center justify-center group">
+          <a href={`${import.meta.env.VITE_API_URL}/${url}`} download className="!bg-blue-500 overflow-hidden text-white rounded-full !p-3 size-12 flex items-center justify-center group">
             <ArrowDownToLine className="group-hover:animate-bounce size-full" />
           </a>
           <div className="flex flex-col gap-1 ">
