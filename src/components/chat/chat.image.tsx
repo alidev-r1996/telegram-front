@@ -13,7 +13,7 @@ const ChatImage = ({ isYou, sender:{name, img}, media, createdAt, message }: Cha
   const [modal, setModal]= useState(false)
   return (
     <div className={`flex items-start gap-4 ${!isYou && "ml-auto"}`}>
-      <img src={img} alt="" className="size-12 rounded-full" onError={(e) => (e.currentTarget.src = "/user.png")}/>
+      <img src={img  ?? "/user.png"} alt="" className="size-12 rounded-full" onError={(e) => (e.currentTarget.src = "/user.png")}/>
       <div
         className={`w-96 ${isYou ? "bg-slate-900" : "bg-slate-700"} rounded-lg relative p-2 px-3`}
       >
