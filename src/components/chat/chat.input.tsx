@@ -1,7 +1,8 @@
 import { Eraser, ImagePlus, MapPin, Paperclip, Send } from "lucide-react";
 import { useRef, useState } from "react";
-import axios from "@/server/axios.config.js";
+// import axios from "@/server/axios.config.js";
 import { useUserStore } from "../store/user-store";
+import { uploadToCloudinary } from "@/lib/utils";
 
 type ChatInputProps = {
   submit: (message: any) => Promise<void>;
@@ -35,24 +36,41 @@ const ChatInput = ({ submit, roomId }: ChatInputProps) => {
       formData.append("file", file);
     }
 
-    if (messageType == "media") {
+    if (messageType == "media" && media) {
       try {
-        const res = await axios.post("/api/message/upload-media", formData);
-        const { success, img } = res.data;
-        if (success) {
-          message["media"] = img;
-        }
+        // const res = await axios.post("/api/message/upload-media", formData);
+
+        // const { success, img } = res.data;
+        // if (success) {
+        //   message["media"] = img;
+        // }
+        const url = await uploadToCloudinary(media);
+        message["media"] = url;
       } catch (error) {
         console.log(error);
       }
-    } else if (messageType == "file") {
-      const res = await axios.post("/api/message/upload-file", formData);
-      const { success, file } = res.data;
-      if (success) {
-        message["file"] = file;
+    } else if (messageType == "file" && file) {
+      // const res = await axios.post("/api/message/upload-file", formData);
+      // const { success, file } = res.data;
+      // if (success) {
+      //   message["file"] = file;
+      // }
+      try {
+        const url = await uploadToCloudinary(file);
+        message["file"] = {
+          title: file.name,
+          size:
+            Number(file.size) / 1024 > 1000
+              ? `${(Number(file.size) / 2048).toFixed(2)} MB`
+              : `${(Number(file.size) / 1024).toFixed(2)} KB`,
+          url,
+          mimeType: file.type,
+        };
+      } catch (error) {
+        console.log(error);
       }
     }
-
+  
     try {
       await submit(message);
       if (messageRef.current) messageRef.current.value = "";
@@ -163,7 +181,8 @@ const ChatInput = ({ submit, roomId }: ChatInputProps) => {
           <MapPin />
         </p>
 
-        <button type="submit"
+        <button
+          type="submit"
           onClick={submitHandler}
           className="cursor-pointer text-blue-500 hover:bg-blue-600 hover:text-white p-1.5 rounded-full transition-all duration-300"
         >
