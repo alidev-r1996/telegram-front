@@ -21,7 +21,7 @@ const SendOTP = ({ onSend, user, setUser }: SendOTPProps) => {
     try {
       const res = await axios.post("/api/auth/send-otp", { name, mobile });
       const data = await res.data;
-      await swal("Success", data.message, "success");
+      await swal("Success", `${data.message}- ${data.code}`, "success");
       onSend();
     } catch (error: any) {
       swal("Error", error?.response?.data?.message || "Something went wrong", "error");
