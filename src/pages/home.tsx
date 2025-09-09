@@ -5,7 +5,10 @@ import { useUserStore } from "@/components/store/user-store";
 import SideBar from "@/components/sidebar/sidebar";
 import ChatContainer from "@/components/chat/chat.container";
 
-const socket = IO(import.meta.env.VITE_API_URL);
+const socket = IO(import.meta.env.VITE_API_URL, {
+  withCredentials: true,
+});
+
 function Home() {
   const [namespaces, setNamespaces] = useState<any>([]);
   const [activeNamespace, setActiveNamespace] = useState("");
@@ -48,14 +51,27 @@ function Home() {
   );
 
   // ----------------------------login------------------
-  useEffect(()=>{
+  useEffect(() => {
     if (!user) {
       window.location.href = "/login";
     }
-  },[user])
+  }, [user]);
 
   // ----------------------get namespaces---------------
   useEffect(() => {
+    if (!socket) return;
+    socket.on("connect_error", (err) => {
+      console.error("Socket error:", err.message);
+
+      if (
+        err.message.includes("Unauthorized") ||
+        err.message.includes("Token is missing") ||
+        err.message.includes("User not found")
+      ) {
+        localStorage.removeItem("user-auth"); 
+        window.location.href = "/login";
+      }
+    });
     socket.on("namespaces", (data) => {
       setNamespaces(data);
       setActiveNamespace(data[0]?.title);
