@@ -37,7 +37,9 @@ function Home() {
       if (namespaceSocket) {
         namespaceSocket.disconnect();
       }
-      const newSocket = IO(`${import.meta.env.VITE_API_URL}${namespaceHref}`);
+      const newSocket = IO(`${import.meta.env.VITE_API_URL}${namespaceHref}`, {
+        withCredentials: true,
+      });
       setNamespaceSocket(newSocket);
     },
     [namespaceSocket]
@@ -68,7 +70,7 @@ function Home() {
         err.message.includes("Token is missing") ||
         err.message.includes("User not found")
       ) {
-        localStorage.removeItem("user-auth"); 
+        localStorage.removeItem("user-auth");
         window.location.href = "/login";
       }
     });
