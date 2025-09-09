@@ -15,7 +15,7 @@ const RoomCard = ({img,lastMessage,title,getRoomInfo}: RoomCardProps) => {
     <div onClick={()=>getRoomInfo(title)} className="flex items-center justify-between p-3 cursor-pointer hover:bg-slate-800/50 border-b border-slate-800">
       <div className="flex gap-2 items-center">
         <img
-          src={`${import.meta.env.VITE_API_URL}/${img}`}
+          src={img}
           alt=""
           className="size-14 object-cover rounded-full border border-slate-800"
           onError={(e) => {
