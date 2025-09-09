@@ -47,6 +47,13 @@ function Home() {
     [namespaceSocket]
   );
 
+  // ----------------------------login------------------
+  useEffect(()=>{
+    if (!user) {
+      window.location.href = "/login";
+    }
+  },[user])
+
   // ----------------------get namespaces---------------
   useEffect(() => {
     socket.on("namespaces", (data) => {
