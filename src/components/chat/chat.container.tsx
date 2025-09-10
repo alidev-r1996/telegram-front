@@ -32,7 +32,7 @@ const ChatContainer = ({
   return (
     <div className={`${!roomInfo.title && "hidden md:block"} max-w-screen flex-1 md:col-span-9 bg-slate-800 h-screen max-h-screen` }>
       {roomInfo.title && (
-        <div className="flex flex-col h-full max-w-full">
+        <div className="flex flex-col h-full">
           <ChatHeader
             activity={roomInfo.createdAt}
             img={roomInfo.img}
@@ -41,7 +41,7 @@ const ChatContainer = ({
             onlineUsers={onlineUsers}
             isRoom = {roomInfo.title ? true : false}
           />
-          <div className="flex-1 p-4 gap-2 flex flex-col overflow-y-auto max-w-full">
+          <div className="flex-1 p-4 gap-2 flex flex-col overflow-y-auto max-w-full min-h-0">
             {messages?.map((message: any, index: number) => {
               const isYou = String(message.sender._id) === String(user?.id);
               if (message.message_type === "media") {
