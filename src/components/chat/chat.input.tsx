@@ -98,7 +98,7 @@ const ChatInput = ({ submit, roomId }: ChatInputProps) => {
   };
 
   return (
-    <form className="flex items-center gap-5  p-2 px-2  cursor-pointer bg-slate-700  text-slate-300 relative">
+    <form className="flex  items-center gap-5  p-2 px-2 max-w-full  cursor-pointer bg-slate-700  text-slate-300 relative">
       {media && (
         <div className="absolute -top-50 left-0">
           <img src={URL.createObjectURL(media)} alt="" className="h-50 aspect-[9/7] rounded " />
@@ -170,7 +170,7 @@ const ChatInput = ({ submit, roomId }: ChatInputProps) => {
         type="text"
         name="message"
         ref={messageRef}
-        className="appearance-none p-1 text-zinc-200 placeholder:text-sm focus:outline-none flex-1"
+        className="appearance-none p-1 text-zinc-200 placeholder:text-sm focus:outline-none flex-1 min-w-0"
         placeholder="write a message..."
       />
       <div className="flex items-center  cursor-pointer  text-slate-300 gap-2 pr-2">

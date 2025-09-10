@@ -12,7 +12,7 @@ const ChatMessage = ({isYou, sender:{name, img}, message, createdAt }: ChatMessa
     <div className={`flex items-start gap-4 ${!isYou && "ml-auto"}`}>
       <img src={img  ?? "/user.png"} alt="" className="size-12 rounded-full" onError={(e) => (e.currentTarget.src = "/user.png")}/>
       <div
-        className={`w-96 ${isYou ? "bg-slate-900" : "bg-slate-700"} rounded-lg relative p-2 px-3`}
+        className={`w-full md:w-96 ${isYou ? "bg-slate-900" : "bg-slate-700"} rounded-lg relative p-2 px-3`}
       >
         <span
           className={`absolute -left-1 top-4 ${
