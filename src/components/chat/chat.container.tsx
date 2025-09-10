@@ -55,7 +55,7 @@ const ChatContainer = ({
               }
               return <ChatMessage key={index} {...message} isYou={isYou} />;
             })}
-            <div ref={messagesEndRef}></div>
+            <div ref={messagesEndRef} className=" h-1"></div>
           </div>
           <ChatInput submit={sendMessage} roomId={roomInfo._id} />
         </div>
