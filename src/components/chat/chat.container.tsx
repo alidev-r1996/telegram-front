@@ -30,9 +30,9 @@ const ChatContainer = ({
   setRoomInfo
 }: ChatContainerProps) => {
   return (
-    <div className={`${!roomInfo.title && "hidden md:block"} flex-1 md:col-span-9 bg-slate-800 h-screen` }>
+    <div className={`${!roomInfo.title && "hidden md:block"} flex-1 md:col-span-9 bg-slate-800 max-h-screen min-h-screen` }>
       {roomInfo.title && (
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col h-full">
           <ChatHeader
             activity={roomInfo.createdAt}
             img={roomInfo.img}
@@ -55,7 +55,7 @@ const ChatContainer = ({
               }
               return <ChatMessage key={index} {...message} isYou={isYou} />;
             })}
-            <div ref={messagesEndRef}></div>
+            <div ref={messagesEndRef} className="bg-transparent"></div>
           </div>
           <ChatInput submit={sendMessage} roomId={roomInfo._id} />
         </div>
