@@ -129,12 +129,13 @@ function Home() {
   }, [namespaceSocket]);
 
   return (
-    <main className="flex items-start md:grid grid-cols-12">
+    <main className="flex items-start md:grid md:grid-cols-12">
       <SideBar
         activeNamespace={activeNamespace}
         namespaceHandler={namespaceHandler}
         namespaces={namespaces}
         rooms={rooms}
+        roomInfo={roomInfo}
         getRoomInfo={getRoomInfo}
       />
       <ChatContainer
@@ -142,6 +143,7 @@ function Home() {
         messages={messages}
         onlineUsers={onlineUsers}
         roomInfo={roomInfo}
+        setRoomInfo={setRoomInfo}
         sendMessage={sendMessage}
         user={user}
       />

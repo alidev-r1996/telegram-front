@@ -2,7 +2,7 @@ import { Eraser, ImagePlus, MapPin, Paperclip, Send } from "lucide-react";
 import { useRef, useState } from "react";
 // import axios from "@/server/axios.config.js";
 import { useUserStore } from "../store/user-store";
-import { uploadFileToCloudinary, uploadToCloudinary } from "@/lib/utils";
+import { uploadToCloudinary } from "@/lib/utils";
 
 type ChatInputProps = {
   submit: (message: any) => Promise<void>;
@@ -56,7 +56,7 @@ const ChatInput = ({ submit, roomId }: ChatInputProps) => {
       //   message["file"] = file;
       // }
       try {
-        const url = await uploadFileToCloudinary(file);
+        const url = await uploadToCloudinary(file);
         message["file"] = {
           title: file.name,
           size:

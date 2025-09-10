@@ -6,6 +6,12 @@ import RoomsList from "./room.list";
 type SideBarProps = {
   activeNamespace: string;
   namespaceHandler: (title: string) => void;
+  roomInfo: {
+    title: string;
+    createdAt: string;
+    img: string;
+    _id: string;
+  };
   namespaces: any[];
   rooms: any[];
   getRoomInfo: (title: string) => void;
@@ -16,10 +22,11 @@ const SideBar = ({
   namespaceHandler,
   namespaces,
   getRoomInfo,
+  roomInfo,
   rooms,
 }: SideBarProps) => {
   return (
-    <div className="col-span-3 bg-slate-900 h-screen border-r border-slate-700">
+    <div className={`${roomInfo.title && "hidden md:block"} md:col-span-3 flex-1 bg-slate-900 h-screen border-r border-slate-700`}>
       <header className="p-4">
         <nav>
           <div className="flex items-center gap-4 w-full">

@@ -12,6 +12,7 @@ type ChatContainerProps = {
     img: string;
     _id: string;
   };
+  setRoomInfo: (any)=>void;
   user: { id: string } | null;
   onlineUsers: number;
   messages: any[];
@@ -26,16 +27,19 @@ const ChatContainer = ({
   roomInfo,
   sendMessage,
   user,
+  setRoomInfo
 }: ChatContainerProps) => {
   return (
-    <div className="col-span-9 bg-slate-800 h-screen">
+    <div className={`${!roomInfo.title && "hidden md:block"} flex-1 md:col-span-9 bg-slate-800 h-screen` }>
       {roomInfo.title && (
         <div className="flex flex-col h-full">
           <ChatHeader
             activity={roomInfo.createdAt}
             img={roomInfo.img}
             title={roomInfo.title}
+            setRoomInfo={setRoomInfo}
             onlineUsers={onlineUsers}
+            isRoom = {roomInfo.title ? true : false}
           />
           <div className="flex-1 p-4 gap-2 flex flex-col overflow-y-auto">
             {messages?.map((message: any, index: number) => {
