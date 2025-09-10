@@ -32,7 +32,7 @@ const ChatContainer = ({
   return (
     <div className={`${!roomInfo.title && "hidden md:block"} flex-1 md:col-span-9 bg-slate-800 h-screen` }>
       {roomInfo.title && (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col min-h-screen">
           <ChatHeader
             activity={roomInfo.createdAt}
             img={roomInfo.img}
