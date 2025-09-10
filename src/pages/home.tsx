@@ -100,7 +100,7 @@ function Home() {
     if (!namespaceSocket) return;
 
     namespaceSocket.on("confirmMsg", (msg) => setMessages((prev) => [...prev, msg]));
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
     return () => {
       namespaceSocket.off("confirmMsg");
     };
@@ -129,7 +129,7 @@ function Home() {
   }, [namespaceSocket]);
 
   return (
-    <main className="flex items-start md:grid md:grid-cols-12">
+    <main className="flex items-start md:grid md:grid-cols-12 h-screen max-h-screen">
       <SideBar
         activeNamespace={activeNamespace}
         namespaceHandler={namespaceHandler}
