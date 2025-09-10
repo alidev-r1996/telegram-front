@@ -4,6 +4,7 @@ import axios from "../../server/axios.config.js";
 type User = {
   name: string;
   mobile: string;
+  img?: string;
   id: string;
 } | null;
 
