@@ -90,6 +90,10 @@ function Home() {
     [namespaceSocket,roomInfo]
   );
 
+  const removePrivateRoom = useCallback(async(room)=>{
+    namespaceSocket.emit("removePrivateRoom", room);
+  },[namespaceSocket])
+
   // ----------------------------login------------------
   useEffect(() => {
     if (!user) {
@@ -178,6 +182,7 @@ function Home() {
         getRoomInfo={getRoomInfo}
         setSearchRoom={setSearchRoom}
         searchRoom={searchRoom}
+        removePrivateRoom={removePrivateRoom}
       />
       <ChatContainer
         messagesEndRef={messagesEndRef}

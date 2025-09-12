@@ -3,10 +3,12 @@ import RoomCard from "./room.card";
 
 type RoomsListProps = {
   rooms: any[];
-  getRoomInfo: (title:string)=>void
+  getRoomInfo: (title:string)=>void,
+  isRemove?: boolean;
+  removePrivateRoom?: (room: any) => void;
 };
 
-const RoomsList = ({ rooms, getRoomInfo }: RoomsListProps) => {
+const RoomsList = ({ rooms, getRoomInfo, isRemove, removePrivateRoom }: RoomsListProps) => {
   const {user} = useUserStore()
   if (!user) return
   let privateRooms = rooms;
@@ -17,7 +19,7 @@ const RoomsList = ({ rooms, getRoomInfo }: RoomsListProps) => {
   return (
     <div className="flex flex-col text-white text-sm">
       {privateRooms.map((item, index) => (
-        <RoomCard key={index} {...item} getRoomInfo={getRoomInfo}/>
+        <RoomCard key={index} {...item} getRoomInfo={getRoomInfo} isRemove={isRemove} removePrivateRoom={removePrivateRoom}/>
       ))}
     </div>
   );

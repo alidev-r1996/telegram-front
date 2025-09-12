@@ -1,18 +1,23 @@
 import { getTimeFromDate, truncateText } from "@/lib/utils";
 import { useUserStore } from "../store/user-store";
+// import { Trash } from "lucide-react";
 
 type RoomCardProps = {
     img: string;
     title: string;
     lastMessage: {message: string, createdAt: string} | null;
-    getRoomInfo: (title: string)=>void
-}
+    getRoomInfo: (title: string)=>void;
+    isRemove?: boolean;
+    _id?: string;
+    removePrivateRoom: (room: any) => void;
+};
 
-const RoomCard = ({img,lastMessage,title,getRoomInfo}: RoomCardProps) => {
+const RoomCard = ({img,lastMessage,title,getRoomInfo,}: RoomCardProps) => {
+
   const {user} = useUserStore();
   if (!user) return;
   return (
-    <div onClick={()=>getRoomInfo(title)} className="flex items-center justify-between p-3 cursor-pointer hover:bg-slate-800/50 border-b border-slate-800">
+    <div onClick={()=>getRoomInfo(title)} className="flex group relative items-center justify-between p-3 cursor-pointer hover:bg-slate-800/50 border-b border-slate-800">
       <div className="flex gap-2 items-center">
         <img
           src={img ?? "/placeholder.jpg"}
@@ -27,7 +32,10 @@ const RoomCard = ({img,lastMessage,title,getRoomInfo}: RoomCardProps) => {
           <p className="text-slate-400 text-xs">{truncateText((lastMessage?.message || "anyone send message to this group!"))}</p>
         </div>
       </div>
-      <p className="text-xs text-slate-300">{lastMessage?.createdAt && getTimeFromDate(lastMessage?.createdAt) || "14:30"} </p>
+      <p className={` text-xs text-slate-300 transition-all duration-200 `}>{lastMessage?.createdAt && getTimeFromDate(lastMessage?.createdAt) || "14:30"} </p>
+      {/* <span onClick={()=>removePrivateRoom({id: _id, title})} className={`${!isRemove && "hidden"} transition-all duration-400 scale-0 group-hover:scale-100 absolute right-3 top-5 rounded-md size-9 p-1.5 bg-slate-800 text-rose-500 hover:text-rose-600 cursor-pointer hover:scale-110 active:scale-95`}>
+          <Trash />
+      </span> */}
     </div>
   );
 };

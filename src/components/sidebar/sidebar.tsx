@@ -17,6 +17,7 @@ type SideBarProps = {
   getRoomInfo: (title: string) => void;
   setSearchRoom: (title: string) => void;
   searchRoom: string;
+  removePrivateRoom?: (room: any) => void;
 };
 
 const SideBar = ({
@@ -27,7 +28,8 @@ const SideBar = ({
   roomInfo,
   rooms,
   setSearchRoom,
-  searchRoom
+  searchRoom,
+  removePrivateRoom
 }: SideBarProps) => {
 
 
@@ -62,7 +64,7 @@ const SideBar = ({
           />
         </nav>
       </header>
-      <RoomsList rooms={rooms} getRoomInfo={getRoomInfo} />
+      <RoomsList rooms={rooms} getRoomInfo={getRoomInfo} isRemove={activeNamespace == "private"} removePrivateRoom={removePrivateRoom}/>
     </div>
   );
 };

@@ -1,8 +1,9 @@
 import { ArrowLeft, EllipsisVertical, Search, X } from "lucide-react";
 import { useUserStore } from "../store/user-store";
-import {useState } from "react";
+import {useRef, useState } from "react";
 
 type ChatHeaderProps = {
+  // roomInfo: { id: string; name: string; img: string, title: string, createdAt: string };
   img: string;
   title: string;
   activity: string;
@@ -15,13 +16,14 @@ type ChatHeaderProps = {
 
 const ChatHeader = ({ img, title, onlineUsers, setRoomInfo, isRoom, searchMessage, setSearchMessage }: ChatHeaderProps) => {
   const { user } = useUserStore();
+  const searchRef = useRef<HTMLInputElement>(null);
   const [isSearch, setIsSearch] = useState(false)
   if (!user) return;
 
 
   return (
     <div className="p-3 flex items-center justify-between bg-slate-900 relative">
-     <div className={`${isSearch && "!scale-0"} flex gap-2 scale-100 transition-all duration-300`}>
+     <div className={`${isSearch && "!hidden"} flex gap-2 scale-100 transition-all duration-300`}>
         <span
           onClick={() => setRoomInfo({})}
           className={`${
@@ -33,10 +35,10 @@ const ChatHeader = ({ img, title, onlineUsers, setRoomInfo, isRoom, searchMessag
         <img
           src={img ?? "/placeholder.jpg"}
           alt=""
-          className="size-12 rounded-full"
+          className={`size-12 rounded-full`}
           onError={(event) => (event.currentTarget.src = "/placeholder.jpg")}
         />
-        <div className="flex flex-col gap-1 text-sm">
+        <div className={`flex flex-col gap-0.5 md:gap-1 text-sm`}>
           <p className="font-bold text-slate-100 capitalize">
             {title.split("-")[0] == user.name ? title.split("-")[1] : title.split("-")[0]}
           </p>
@@ -45,10 +47,11 @@ const ChatHeader = ({ img, title, onlineUsers, setRoomInfo, isRoom, searchMessag
           </p>
         </div>
       </div>
-      <form className={`scale-0 ${isSearch && "scale-100"} flex-1 w-[92%] absolute transition-all duration-300`}>
+      <form className={`scale-0 ${isSearch && "scale-100"} flex-1 md:w-[95%] w-[70%]  transition-all duration-300`}>
         <input
           type="text"
           value={searchMessage}
+          ref={searchRef}
           onChange={(e) => setSearchMessage(e.target.value)}
           className="p-1.5 rounded-full w-full peer px-4 mr-4 focus:outline-none bg-slate-800 text-sm placeholder:text-sm text-slate-200 placeholder:text-slate-400"
           placeholder="search message..."
@@ -59,11 +62,11 @@ const ChatHeader = ({ img, title, onlineUsers, setRoomInfo, isRoom, searchMessag
         />
       </form>
       <div className="flex items-center gap-0.5 [&>span]:p-2 [&>span]:rounded-full cursor-pointer [&>span]:hover:bg-slate-700/60 text-slate-300 ">
-        <span onClick={()=>setIsSearch(!isSearch)}>
+        <span onClick={()=>{setIsSearch(!isSearch); searchRef.current?.focus()}}>
           {isSearch ? <X /> : <Search />}
         </span>
         
-          <span >
+          <span className={`${isSearch && "hidden"}`}>
             <EllipsisVertical />
           </span>
       </div>
