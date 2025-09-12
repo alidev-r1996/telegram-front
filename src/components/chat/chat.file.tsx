@@ -28,7 +28,7 @@ const ChatFile = ({ sender: { img, name }, isYou, createdAt, file:{size, title, 
       </span>
         <p className={`${isYou ? "text-blue-500" : "text-slate-200"} font-bold mb-2`}>{isYou ? "You" : name}</p>
         <div className="flex items-center gap-3">
-          <a href={url} download className="!bg-blue-500 overflow-hidden text-white rounded-full !p-3 size-12 flex items-center justify-center group">
+          <a target="_blank" href={url} download className="!bg-blue-500 overflow-hidden text-white rounded-full !p-3 size-12 flex items-center justify-center group">
             <ArrowDownToLine className="group-hover:animate-bounce size-full" />
           </a>
           <div className="flex flex-col gap-1 ">
