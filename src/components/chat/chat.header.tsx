@@ -1,4 +1,4 @@
-import { ArrowLeft, EllipsisVertical, Search, X } from "lucide-react";
+import { ArrowLeft,Search, X } from "lucide-react";
 import { useUserStore } from "../store/user-store";
 import {useRef, useState } from "react";
 
@@ -66,9 +66,9 @@ const ChatHeader = ({ img, title, onlineUsers, setRoomInfo, isRoom, searchMessag
           {isSearch ? <X /> : <Search />}
         </span>
         
-          <span className={`${isSearch && "hidden"}`}>
+          {/* <span className={`${isSearch && "hidden"}`}>
             <EllipsisVertical />
-          </span>
+          </span> */}
       </div>
     </div>
   );
