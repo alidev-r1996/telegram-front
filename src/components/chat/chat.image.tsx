@@ -1,4 +1,5 @@
 import { getTimeFromDate } from "@/lib/utils";
+import { ImageMinus } from "lucide-react";
 import { useState } from "react";
 
 type ChatImageProps = {
@@ -6,13 +7,15 @@ type ChatImageProps = {
   createdAt: string;
   isYou?: boolean;
   media: string;
-  message: string
+  message: string;
+  _id: string;
+  removeMessage: (msgId: string) => Promise<void>;
 };
 
-const ChatImage = ({ isYou, sender:{name, img}, media, createdAt, message }: ChatImageProps) => {
+const ChatImage = ({ isYou, sender:{name, img}, media, createdAt, message, removeMessage, _id }: ChatImageProps) => {
   const [modal, setModal]= useState(false)
   return (
-    <div className={`flex items-start gap-4 ${!isYou && "ml-auto"}`}>
+    <div className={`flex items-start gap-4 ${!isYou ? "ml-auto": "group"} `}>
       <img src={img  ?? "/user.png"} alt="" className="size-12 rounded-full" onError={(e) => (e.currentTarget.src = "/user.png")}/>
       <div
         className={`w-full md:w-96 ${isYou ? "bg-slate-900" : "bg-slate-700"} rounded-lg relative p-2 px-3`}
@@ -22,6 +25,9 @@ const ChatImage = ({ isYou, sender:{name, img}, media, createdAt, message }: Cha
             isYou ? "bg-slate-900" : "bg-slate-700"
           } size-2 rotate-45`}
         ></span>
+         <span onClick={()=>removeMessage(_id)} className={`absolute right-2 top-1  rounded-md size-8.5 p-1.5 ${isYou? "hover:bg-slate-800 text-rose-600":"hover:bg-slate-800 text-rose-500"}  scale-0 cursor-pointer transition-all duration-300 group-hover:scale-100 hover:scale-110 active:scale-95`}>
+          <ImageMinus />
+      </span>
         <p className={`${isYou ? "text-blue-500" : "text-slate-200"} font-bold mb-2`}>{isYou ? "You" : name}</p>
         <div className="flex items-center gap-3">
           <img onClick={()=>setModal(true)} src={media} alt="" className="rounded-lg aspect-[9/5] w-full cursor-zoom-in" />

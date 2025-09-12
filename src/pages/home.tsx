@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import IO from "socket.io-client";
 import { useEffect } from "react";
 import { useUserStore } from "@/components/store/user-store";
@@ -19,6 +19,8 @@ function Home() {
   const [onlineUsers, setOnlineUsers] = useState<any>();
   const { user } = useUserStore();
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const [searchRoom, setSearchRoom] = useState("")
+  const [searchMessage, setSearchMessage] = useState("")
 
   const namespaceHandler = (title: string) => {
     setActiveNamespace(title);
@@ -32,8 +34,36 @@ function Home() {
     [namespaceSocket]
   );
 
-  const getNamespaceRooms = useCallback(
-    (namespaceHref: string) => {
+  const filteredRooms = useMemo(()=>{
+    if (searchRoom.trim() == ""){
+      return rooms
+    }
+    const filterRoom = rooms.filter((room)=>{
+      return room.title.toLowerCase().includes(searchRoom.trim().toLowerCase())
+    })
+    if (filterRoom.length < 1){
+      return []
+    }else{
+      return filterRoom
+    }
+  },[rooms,searchRoom])
+
+  
+  const filteredMessages = useMemo(()=>{
+    if (searchMessage.trim() == ""){
+      return messages
+    }
+    const filterMessage = messages.filter((msg)=>{
+      return msg.message.toLowerCase().includes(searchMessage.trim().toLowerCase())
+    })
+    if (filterMessage.length < 1){
+      return []
+    }else{
+      return filterMessage
+    }
+  },[messages,searchMessage])
+
+  const getNamespaceRooms = useCallback((namespaceHref: string) => {
       if (namespaceSocket) {
         namespaceSocket.disconnect();
       }
@@ -51,6 +81,14 @@ function Home() {
     },
     [namespaceSocket]
   );
+  
+  const removeMessage = useCallback(
+    async (msgId) => {
+      console.log(roomInfo)
+      namespaceSocket.emit("removeMsg", {msgId, roomTitle: roomInfo.title});
+    },
+    [namespaceSocket,roomInfo]
+  );
 
   // ----------------------------login------------------
   useEffect(() => {
@@ -62,9 +100,9 @@ function Home() {
   // ----------------------get namespaces---------------
   useEffect(() => {
     if (!socket) return;
-    socket.on("connect_error", (err) => {
-      console.error("Socket error:", err.message);
 
+    socket.on("connect_error", (err) => {
+      // console.error("Socket error:", err.message);
       if (
         err.message.includes("Unauthorized") ||
         err.message.includes("Token is missing") ||
@@ -74,6 +112,7 @@ function Home() {
         window.location.href = "/login";
       }
     });
+
     socket.on("namespaces", (data) => {
       setNamespaces(data);
       setActiveNamespace(data[0]?.title);
@@ -98,8 +137,8 @@ function Home() {
   // ----------------------get new messages-------------
   useEffect(() => {
     if (!namespaceSocket) return;
-
     namespaceSocket.on("confirmMsg", (msg) => setMessages((prev) => [...prev, msg]));
+    namespaceSocket.on("confirmRemove", (msgId) => setMessages((prev) => prev.filter((msg) => msg._id !== msgId)));
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
     return () => {
       namespaceSocket.off("confirmMsg");
@@ -134,17 +173,22 @@ function Home() {
         activeNamespace={activeNamespace}
         namespaceHandler={namespaceHandler}
         namespaces={namespaces}
-        rooms={rooms}
+        rooms={filteredRooms}
         roomInfo={roomInfo}
         getRoomInfo={getRoomInfo}
+        setSearchRoom={setSearchRoom}
+        searchRoom={searchRoom}
       />
       <ChatContainer
         messagesEndRef={messagesEndRef}
-        messages={messages}
+        messages={filteredMessages}
         onlineUsers={onlineUsers}
         roomInfo={roomInfo}
         setRoomInfo={setRoomInfo}
         sendMessage={sendMessage}
+        removeMessage={removeMessage}
+        setSearchMessage={setSearchMessage}
+        searchMessage={searchMessage}
         user={user}
       />
     </main>

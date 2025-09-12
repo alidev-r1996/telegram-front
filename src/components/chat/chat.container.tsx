@@ -12,12 +12,15 @@ type ChatContainerProps = {
     img: string;
     _id: string;
   };
-  setRoomInfo: (any)=>void;
+  setRoomInfo: (any) => void;
   user: { id: string } | null;
   onlineUsers: number;
   messages: any[];
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
   sendMessage: (message: any) => Promise<void>;
+  removeMessage: (msgId: string) => Promise<void>;
+  setSearchMessage: (searchMessage: string) => void;
+  searchMessage: string;
 };
 
 const ChatContainer = ({
@@ -27,33 +30,55 @@ const ChatContainer = ({
   roomInfo,
   sendMessage,
   user,
-  setRoomInfo
+  setRoomInfo,
+  removeMessage,
+  setSearchMessage,
+  searchMessage
 }: ChatContainerProps) => {
   return (
-    <div className={`${!roomInfo.title && "hidden md:block"} max-w-screen flex-1 md:col-span-9 bg-slate-800 h-screen max-h-screen` }>
+    <div
+      className={`${
+        !roomInfo.title && "hidden md:block"
+      } max-w-screen flex-1 md:col-span-9 bg-slate-800 h-screen max-h-screen`}
+    >
       {roomInfo.title && (
         <div className="flex flex-col h-full">
           <ChatHeader
             activity={roomInfo.createdAt}
             img={roomInfo.img}
             title={roomInfo.title}
+            setSearchMessage={setSearchMessage}
+            searchMessage={searchMessage}
             setRoomInfo={setRoomInfo}
             onlineUsers={onlineUsers}
-            isRoom = {roomInfo.title ? true : false}
+            isRoom={roomInfo.title ? true : false}
           />
           <div className="flex-1 p-4 gap-2 flex flex-col overflow-y-auto max-w-full min-h-0">
             {messages?.map((message: any, index: number) => {
               const isYou = String(message.sender._id) === String(user?.id);
               if (message.message_type === "media") {
-                return <ChatImage key={index} {...message} isYou={isYou} />;
+                return (
+                  <ChatImage removeMessage={removeMessage} key={index} {...message} isYou={isYou} />
+                );
               }
               if (message.message_type === "location") {
-                return <ChatLocation key={index} {...message} isYou={isYou} />;
+                return (
+                  <ChatLocation
+                    removeMessage={removeMessage}
+                    key={index}
+                    {...message}
+                    isYou={isYou}
+                  />
+                );
               }
               if (message.message_type === "file") {
-                return <ChatFile key={index} {...message} isYou={isYou} />;
+                return (
+                  <ChatFile removeMessage={removeMessage} key={index} {...message} isYou={isYou} />
+                );
               }
-              return <ChatMessage key={index} {...message} isYou={isYou} />;
+              return (
+                <ChatMessage removeMessage={removeMessage} key={index} {...message} isYou={isYou} />
+              );
             })}
             <div ref={messagesEndRef} className=" h-1"></div>
           </div>

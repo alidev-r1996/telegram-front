@@ -145,6 +145,7 @@ const ChatInput = ({ submit, roomId }: ChatInputProps) => {
             type="file"
             onChange={(e) => setFile(e.target.files![0])}
             hidden
+            accept={".pdf, .mp3, .mp4, .png, .webp, .jpg, .jpeg"}
             id="file"
             name="file"
           />
