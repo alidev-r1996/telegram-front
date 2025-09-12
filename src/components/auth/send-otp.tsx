@@ -21,7 +21,7 @@ const SendOTP = ({ onSend, user, setUser }: SendOTPProps) => {
     try {
       const res = await axios.post("/api/auth/send-otp", { name, mobile });
       const data = await res.data;
-      await swal("Success", `${data.message}- ${data.code}`, "success");
+      await swal("Success", `${data.message}`, "success");
       onSend();
     } catch (error: any) {
       swal("Error", error?.response?.data?.message || "Something went wrong", "error");
@@ -53,10 +53,10 @@ const SendOTP = ({ onSend, user, setUser }: SendOTPProps) => {
             />
           </div>
           <div>
-            <label className="block text-slate-400 text-sm mb-1">Mobile</label>
+            <label className="block text-slate-400 text-sm mb-1">Email</label>
             <Input
-              placeholder="e.g. +98935000000"
-              type="tel"
+              placeholder="e.g. example@gmail.com"
+              type="email"
               value={mobile}
               onChange={(e) => setUser({ ...user, mobile: e.target.value })}
               required
