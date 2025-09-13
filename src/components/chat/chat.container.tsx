@@ -36,6 +36,7 @@ const ChatContainer = ({
   searchMessage
 }: ChatContainerProps) => {
   return (
+    
     <div
       className={`${
         !roomInfo.title && "hidden md:block"

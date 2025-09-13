@@ -18,6 +18,7 @@ type SideBarProps = {
   setSearchRoom: (title: string) => void;
   searchRoom: string;
   removePrivateRoom?: (room: any) => void;
+  addPrivateRoom: (e: any) => void;
 };
 
 const SideBar = ({
@@ -29,7 +30,8 @@ const SideBar = ({
   rooms,
   setSearchRoom,
   searchRoom,
-  removePrivateRoom
+  removePrivateRoom,
+  addPrivateRoom,
 }: SideBarProps) => {
 
 
@@ -42,7 +44,7 @@ const SideBar = ({
       <header className="p-4">
         <nav>
           <div className="flex items-center gap-4 w-full">
-            <MainMenu />
+            <MainMenu addPrivateRoom={addPrivateRoom}/>
             <form className="flex-1 relative">
               <input
                 type="text"

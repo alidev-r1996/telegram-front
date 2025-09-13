@@ -19,8 +19,8 @@ function Home() {
   const [onlineUsers, setOnlineUsers] = useState<any>();
   const { user } = useUserStore();
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
-  const [searchRoom, setSearchRoom] = useState("")
-  const [searchMessage, setSearchMessage] = useState("")
+  const [searchRoom, setSearchRoom] = useState("");
+  const [searchMessage, setSearchMessage] = useState("");
 
   const namespaceHandler = (title: string) => {
     setActiveNamespace(title);
@@ -34,36 +34,36 @@ function Home() {
     [namespaceSocket]
   );
 
-  const filteredRooms = useMemo(()=>{
-    if (searchRoom.trim() == ""){
-      return rooms
+  const filteredRooms = useMemo(() => {
+    if (searchRoom.trim() == "") {
+      return rooms;
     }
-    const filterRoom = rooms.filter((room)=>{
-      return room.title.toLowerCase().includes(searchRoom.trim().toLowerCase())
-    })
-    if (filterRoom.length < 1){
-      return []
-    }else{
-      return filterRoom
+    const filterRoom = rooms.filter((room) => {
+      return room.title.toLowerCase().includes(searchRoom.trim().toLowerCase());
+    });
+    if (filterRoom.length < 1) {
+      return [];
+    } else {
+      return filterRoom;
     }
-  },[rooms,searchRoom])
+  }, [rooms, searchRoom]);
 
-  
-  const filteredMessages = useMemo(()=>{
-    if (searchMessage.trim() == ""){
-      return messages
+  const filteredMessages = useMemo(() => {
+    if (searchMessage.trim() == "") {
+      return messages;
     }
-    const filterMessage = messages.filter((msg)=>{
-      return msg.message.toLowerCase().includes(searchMessage.trim().toLowerCase())
-    })
-    if (filterMessage.length < 1){
-      return []
-    }else{
-      return filterMessage
+    const filterMessage = messages.filter((msg) => {
+      return msg.message.toLowerCase().includes(searchMessage.trim().toLowerCase());
+    });
+    if (filterMessage.length < 1) {
+      return [];
+    } else {
+      return filterMessage;
     }
-  },[messages,searchMessage])
+  }, [messages, searchMessage]);
 
-  const getNamespaceRooms = useCallback((namespaceHref: string) => {
+  const getNamespaceRooms = useCallback(
+    (namespaceHref: string) => {
       if (namespaceSocket) {
         namespaceSocket.disconnect();
       }
@@ -81,18 +81,32 @@ function Home() {
     },
     [namespaceSocket]
   );
-  
+
   const removeMessage = useCallback(
     async (msgId) => {
-      console.log(roomInfo)
-      namespaceSocket.emit("removeMsg", {msgId, roomTitle: roomInfo.title});
+      console.log(roomInfo);
+      namespaceSocket.emit("removeMsg", { msgId, roomTitle: roomInfo.title });
     },
-    [namespaceSocket,roomInfo]
+    [namespaceSocket, roomInfo]
   );
 
-  const removePrivateRoom = useCallback(async(room)=>{
-    namespaceSocket.emit("removePrivateRoom", room);
-  },[namespaceSocket])
+  const addPrivateRoom = useCallback(
+    async (email: string) => {
+      namespaceSocket.emit("addPrivateRoom", { email, sender: user });
+      namespaceSocket.on("error", ({ message }) => {
+        swal("Error", message, "error");
+      });
+      setActiveNamespace("private");
+    },
+    [namespaceSocket, user]
+  );
+
+  const removePrivateRoom = useCallback(
+    async (room) => {
+      namespaceSocket.emit("removePrivateRoom", room);
+    },
+    [namespaceSocket]
+  );
 
   // ----------------------------login------------------
   useEffect(() => {
@@ -142,7 +156,9 @@ function Home() {
   useEffect(() => {
     if (!namespaceSocket) return;
     namespaceSocket.on("confirmMsg", (msg) => setMessages((prev) => [...prev, msg]));
-    namespaceSocket.on("confirmRemove", (msgId) => setMessages((prev) => prev.filter((msg) => msg._id !== msgId)));
+    namespaceSocket.on("confirmRemove", (msgId) =>
+      setMessages((prev) => prev.filter((msg) => msg._id !== msgId))
+    );
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
     return () => {
       namespaceSocket.off("confirmMsg");
@@ -153,6 +169,28 @@ function Home() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  useEffect(() => {
+    if (!namespaceSocket) return;
+    namespaceSocket.on("confirmAddRoom", (rooms) => {
+      if (activeNamespace == "private") {
+        setRooms((prev) => [...prev, ...rooms]);
+      }
+    });
+    namespaceSocket.on("confirmRemovePrivateRoom", (roomIds) => {
+      setRooms((prevRooms: any) =>
+        prevRooms.filter((room: any) => roomIds.includes(room._id) == false)
+      );
+      if (roomIds.includes(roomInfo._id)) {
+        setRoomInfo({});
+        setMessages([]);
+      }
+    });
+    return () => {
+      namespaceSocket.off("confirmAddRoom");
+      namespaceSocket.off("confirmRemovePrivateRoom");
+    };
+  }, [namespaceSocket, roomInfo, activeNamespace]);
 
   // --------------------------get room info---------------
   useEffect(() => {
@@ -182,6 +220,7 @@ function Home() {
         getRoomInfo={getRoomInfo}
         setSearchRoom={setSearchRoom}
         searchRoom={searchRoom}
+        addPrivateRoom={addPrivateRoom}
         removePrivateRoom={removePrivateRoom}
       />
       <ChatContainer
