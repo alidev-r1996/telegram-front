@@ -84,7 +84,6 @@ function Home() {
 
   const removeMessage = useCallback(
     async (msgId) => {
-      console.log(roomInfo);
       namespaceSocket.emit("removeMsg", { msgId, roomTitle: roomInfo.title });
     },
     [namespaceSocket, roomInfo]
@@ -101,6 +100,7 @@ function Home() {
     [namespaceSocket, user]
   );
 
+
   const removePrivateRoom = useCallback(
     async (room) => {
       namespaceSocket.emit("removePrivateRoom", room);
@@ -108,12 +108,6 @@ function Home() {
     [namespaceSocket]
   );
 
-  // ----------------------------login------------------
-  useEffect(() => {
-    if (!user) {
-      window.location.href = "/login";
-    }
-  }, [user]);
 
   // ----------------------get namespaces---------------
   useEffect(() => {
@@ -170,18 +164,20 @@ function Home() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+
+  // --------------------------add/remove private room---------------
   useEffect(() => {
     if (!namespaceSocket) return;
-    namespaceSocket.on("confirmAddRoom", (rooms) => {
+    namespaceSocket.on("confirmAddRoom", (room) => {
       if (activeNamespace == "private") {
-        setRooms((prev) => [...prev, ...rooms]);
+        setRooms((prev) => [...prev, room]);
       }
     });
-    namespaceSocket.on("confirmRemovePrivateRoom", (roomIds) => {
+    namespaceSocket.on("confirmRemovePrivateRoom", (roomId) => {
       setRooms((prevRooms: any) =>
-        prevRooms.filter((room: any) => roomIds.includes(room._id) == false)
+        prevRooms.filter((room: any) => room._id !== roomId)
       );
-      if (roomIds.includes(roomInfo._id)) {
+      if (roomId === roomInfo._id) {
         setRoomInfo({});
         setMessages([]);
       }

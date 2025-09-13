@@ -38,12 +38,7 @@ const ChatInput = ({ submit, roomId }: ChatInputProps) => {
 
     if (messageType == "media" && media) {
       try {
-        // const res = await axios.post("/api/message/upload-media", formData);
 
-        // const { success, img } = res.data;
-        // if (success) {
-        //   message["media"] = img;
-        // }
         const url = await uploadToCloudinary(media);
         message["media"] = url;
       } catch (error) {

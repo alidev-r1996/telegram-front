@@ -15,7 +15,6 @@ const RoomsList = ({ rooms, getRoomInfo, isRemove, removePrivateRoom }: RoomsLis
   const isPrivate = rooms.map(room=>room.title.includes('-'))
   if (isPrivate.every(item=>item==true)) {
     privateRooms = rooms.filter(room=>room.title.includes(user.name))
-    privateRooms = privateRooms.filter(room=>room.title.split("-")[0] == user.name)
   }
   return (
     <div className="flex flex-col text-white text-sm">
