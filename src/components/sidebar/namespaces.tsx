@@ -4,12 +4,6 @@ type NameSpacesProps = {
   namespaceHandler: (string) => void;
 };
 
-/*************  ✨ Windsurf Command ⭐  *************/
-/**
- * A list of namespaces that can be clicked to switch the active namespace.
- *
-
-/*******  84558c6f-fdee-433e-94b2-b990bcc9c517  *******/
 const NameSpacesList = ({ namespaces, activeNamespace, namespaceHandler }: NameSpacesProps) => {
   return (
     <ul className="flex items-center mt-4 text-sm overflow-auto gap-1">

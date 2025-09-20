@@ -29,12 +29,14 @@ function Home() {
 
   const getRoomInfo = useCallback(
     (title) => {
+      console.log("getRoomInfo useCallBack");
       namespaceSocket?.emit("joining", title);
     },
     [namespaceSocket]
   );
 
   const filteredRooms = useMemo(() => {
+    console.log("filteredRooms useMemo");
     if (searchRoom.trim() == "") {
       return rooms;
     }
@@ -49,6 +51,7 @@ function Home() {
   }, [rooms, searchRoom]);
 
   const filteredMessages = useMemo(() => {
+    console.log("filteredMessages useMemo");
     if (searchMessage.trim() == "") {
       return messages;
     }
@@ -64,6 +67,7 @@ function Home() {
 
   const getNamespaceRooms = useCallback(
     (namespaceHref: string) => {
+      console.log("getNamespaceRooms useCallBack");
       if (namespaceSocket) {
         namespaceSocket.disconnect();
       }
@@ -77,6 +81,7 @@ function Home() {
 
   const sendMessage = useCallback(
     async (message) => {
+      console.log("sendMessage useCallBack");
       namespaceSocket.emit("newMsg", message);
     },
     [namespaceSocket]
@@ -84,6 +89,7 @@ function Home() {
 
   const removeMessage = useCallback(
     async (msgId) => {
+      console.log("removeMessage useCallBack");
       namespaceSocket.emit("removeMsg", { msgId, roomTitle: roomInfo.title });
     },
     [namespaceSocket, roomInfo]
@@ -91,11 +97,11 @@ function Home() {
 
   const addPrivateRoom = useCallback(
     async (email: string) => {
+      console.log("addPrivateRoom useCallBack");
       namespaceSocket.emit("addPrivateRoom", { email, sender: user });
       namespaceSocket.on("error", ({ message }) => {
         swal("Error", message, "error");
       });
-      setActiveNamespace("private");
     },
     [namespaceSocket, user]
   );
@@ -103,6 +109,7 @@ function Home() {
 
   const removePrivateRoom = useCallback(
     async (room) => {
+      console.log("removePrivateRoom useCallBack");
       namespaceSocket.emit("removePrivateRoom", room);
     },
     [namespaceSocket]
@@ -112,7 +119,7 @@ function Home() {
   // ----------------------get namespaces---------------
   useEffect(() => {
     if (!socket) return;
-
+    console.log("get namespaces effect");
     socket.on("connect_error", (err) => {
       // console.error("Socket error:", err.message);
       if (
@@ -135,39 +142,18 @@ function Home() {
     };
   }, [getNamespaceRooms]);
 
-  // ----------------------get namespace rooms------------------
-  useEffect(() => {
-    if (!namespaceSocket) return;
-    namespaceSocket?.on("namespaceRooms", (namespaceRooms) => {
-      setRooms(namespaceRooms);
-    });
-    return () => {
-      namespaceSocket?.off("namespaceRooms");
-    };
-  }, [namespaceSocket]);
 
   // ----------------------get new messages-------------
   useEffect(() => {
     if (!namespaceSocket) return;
+    console.log("get new messages effect");
+    namespaceSocket?.on("namespaceRooms", (namespaceRooms) => {
+      setRooms(namespaceRooms);
+    });
     namespaceSocket.on("confirmMsg", (msg) => setMessages((prev) => [...prev, msg]));
     namespaceSocket.on("confirmRemove", (msgId) =>
       setMessages((prev) => prev.filter((msg) => msg._id !== msgId))
     );
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    return () => {
-      namespaceSocket.off("confirmMsg");
-    };
-  }, [namespaceSocket]);
-
-  // Scroll to bottom whenever messages change
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-
-  // --------------------------add/remove private room---------------
-  useEffect(() => {
-    if (!namespaceSocket) return;
     namespaceSocket.on("confirmAddRoom", (room) => {
       if (activeNamespace == "private") {
         setRooms((prev) => [...prev, room]);
@@ -177,21 +163,11 @@ function Home() {
       setRooms((prevRooms: any) =>
         prevRooms.filter((room: any) => room._id !== roomId)
       );
-      if (roomId === roomInfo._id) {
+      if (roomId == roomInfo._id) {
         setRoomInfo({});
         setMessages([]);
       }
     });
-    return () => {
-      namespaceSocket.off("confirmAddRoom");
-      namespaceSocket.off("confirmRemovePrivateRoom");
-    };
-  }, [namespaceSocket, roomInfo, activeNamespace]);
-
-  // --------------------------get room info---------------
-  useEffect(() => {
-    if (!namespaceSocket) return;
-
     namespaceSocket.on("roomInfo", ({ room, messages }) => {
       setRoomInfo(room);
       setMessages(messages);
@@ -200,10 +176,24 @@ function Home() {
     namespaceSocket.on("onlineUsers", (count) => setOnlineUsers(count));
 
     return () => {
+      namespaceSocket.off("confirmMsg");
+      namespaceSocket.off("confirmRemove");
+      namespaceSocket.off("confirmAddRoom");
+      namespaceSocket.off("confirmRemovePrivateRoom");
+      namespaceSocket.off("namespaceRooms");
       namespaceSocket.off("roomInfo");
       namespaceSocket.off("onlineUsers");
     };
   }, [namespaceSocket]);
+
+  // Scroll to bottom whenever messages change
+  useEffect(() => {
+    if (!messages.length) return;
+    console.log("Scroll to bottom whenever messages change");
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+
 
   return (
     <main className="flex items-start md:grid md:grid-cols-12 h-screen max-h-screen">
