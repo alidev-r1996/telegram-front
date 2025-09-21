@@ -1,69 +1,97 @@
-# React + TypeScript + Vite
+# Telegram Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A frontend application for interacting with the Telegram backend. Built with React, TypeScript, and Vite.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Overview
 
-## Expanding the ESLint configuration
+This project provides the frontend interface for your Telegram integration system.  
+It connects to the backend to send and receive Real-time messages, Location, file and Images.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Features
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+- React + TypeScript frontend  
+- Built using Vite for fast hot module reloading  
+- Integrated with backend API endpoints  
+- ESLint for code quality  
+- Configurable via environment variables  
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## Technologies
+
+- React  
+- TypeScript  
+- Vite  
+- ESLint
+- Cloudinary
+- CSS / CSS Modules (or your preferred styling approach)  
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+Make sure you have:
+
+- Node.js v14 or higher  
+- npm or yarn  
+
+### Installation
+
+Clone this repository:
+
+```bash
+git clone https://github.com/alidev-r1996/telegram-front.git
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Install dependencies:
+```bash
+npm install
+# or
+yarn install
 ```
+
+## Configuration
+Create a .env file in the root directory with values similar to:
+```
+VITE_API_URL=
+UPLOADTHING_SECRET=
+UPLOADTHING_APP_ID=
+UPLOADTHING_TOKEN=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+```
+Adjust to your setup (API URL, keys, etc.).
+
+## Running Locally
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+## Project Structure
+```
+telegram-front/
+├── public/                 # static files
+├── src/                    # source code
+│   ├── components/         # UI components
+│   ├── pages/              # page views, routes
+│   ├── services/           # API calls or data fetching
+│   ├── styles/             # CSS / styling
+│   └── main.tsx            # entry point
+├── .env                    # environment vars (not committed ideally)
+├── .gitignore
+├── vite.config.ts
+├── package.json
+└── tsconfig.json
+```
+
+
+
+
