@@ -92,6 +92,17 @@ telegram-front/
 └── tsconfig.json
 ```
 
+## Contributing
+
+Contributions are welcome!  
+
+<ol start="1">
+  <li>Fork the repository</li>
+  <li>Create a feature branch: <code>git checkout -b feature/YourFeature</code></li>
+  <li>Commit your changes: <code>git commit -m "Add new feature"</code></li>
+  <li>Push to your branch: <code>git push origin feature/YourFeature</code></li>
+  <li>Open a Pull Request</li>
+</ol>
 
 
 
